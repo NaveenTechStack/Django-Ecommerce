@@ -1,0 +1,47 @@
+{%extends "shop/layouts/main.html" %} {%block content%}
+
+<section class="py-3 text-center container" style="margin-top: 70px">
+  <div class="row py-lg-3">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light">Bestsellers</h1>
+      <p class="lead text-muted">
+        This is the collections page of our shopkart website. Here you can find
+        all the catagories of our products.
+      </p>
+      <p>
+        <a href="{% url 'login_page' %}" class="btn btn-primary my-2">Already User</a>
+        <a href="{% url 'register' %}" class="btn btn-secondary my-2">Register</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="py-3 my-5 bg-light">
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h4 class="mb-3">Collections</h4>
+      <hr style="border-color: #b8bfc2" />
+      <!--message-->
+			{% include 'shop/inc/message.html' %}
+    </div>
+
+    {% for item in catagory %}
+    <div class="col-md-4 col-lg-3">
+      <div class="card my-3">
+       <img src="{{item.image.url}}" class="card-img-top" style="height: 250px; object-fit: cover;" alt="catagories" />
+         <a href="{% url 'collections' item.name %}">
+         <div class="card-body">
+            <h5 class="card-title text-primary">{{ item.name }}</h5>
+             <p class="card-text">
+                {{item.description}}
+             </p>            
+         </div>
+        </a>        
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+</section>
+{%endblock%}

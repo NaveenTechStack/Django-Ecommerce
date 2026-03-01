@@ -1,0 +1,44 @@
+{%extends "shop/layouts/main.html" %}
+<!-- Address page -->
+{%block content%}
+<!--Main Content-->
+<div class="container" style="margin-top: 70px; min-height: 600px">
+	<div class="row">
+		<h3>Welcome <span class="text-capitalize">{{request.user}}</span></h3>
+
+		<div class="col-sm-2 border-end">
+			<ul class="list-unstyled">
+				<li class="d-grid">
+					<a href="{% url 'profile' %}" class="btn">Profile</a>
+				</li>
+				<li class="d-grid">
+					<a href="{% url 'address' %}" class="btn btn-primary">Address</a>
+				</li>
+			</ul>
+		</div>
+		<div class="col-sm-8 offset-sm-1">
+			<div class="row">
+				{% for a in add %}
+				<div class="col-sm-6">
+					<div class="card mb-3">
+						<div class="card-body">
+							<h5>{{a.name}}</h5>
+							<p>{{a.locality}}, {{a.city}}, {{a.state}} - {{a.zipcode}}</p>
+							<p>Mobile: {{a.mobile}}</p>
+							<p class="text-right">
+								<a
+									href="{% url 'updateAddress' pk=a.id %}"
+									type="button"
+									class="btn btn-success"
+									>Update</a
+								>
+							</p>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

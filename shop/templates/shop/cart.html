@@ -1,0 +1,192 @@
+{%extends "shop/layouts/main.html" %}
+<!--Page content-->
+{%block content%}
+
+<div class="container" style="margin-top: 70px; min-height: 500px">
+	<div class="row">
+		<h1 class="text-center mb-4 fw-bold">Shopping Cart</h1>
+
+		<div class="col-sm-8">
+			<div class="card shadow-sm border-0">
+				<div class="card-body">
+					<h3 class="fw-bold">Your Cart</h3>
+					{% if cart %} {% for item in cart %}
+					<div class="row align-items-center py-3">
+						<div class="col-sm-3 text-center">
+							<img
+								src="{{ item.product.product_image.url }}"
+								alt="{{ item.product.name }}"
+								class="img-fluid rounded shadow-sm"
+								height="150"
+								width="150" />
+						</div>
+
+						<div class="col-sm-9">
+							<div>
+								<h5 class="fw-semibold mb-1">{{ item.product.name }}</h5>
+
+								<p class="mb-2 text-muted small lh-sm">
+									{{ item.product.description }}
+								</p>
+
+								<div class="my-3 d-flex align-items-center gap-2">
+									<label class="form-label mb-0">Quantity:</label>
+
+									<div class="input-group input-group-sm" style="width: 110px">
+										<button
+											class="btn btn-outline-success py-0 minus-cart-btn"
+											type="button"
+											id="btnminus"
+											pid="{{ item.product.id }}">
+											<i class="fa fa-minus small"></i>
+										</button>
+
+										<input
+											type="text"
+											class="form-control text-center py-0"
+											value="{{ item.product_qty }}"
+											id="txtQty"
+											readonly />
+
+										<button
+											class="btn btn-outline-success py-0 plus-cart-btn"
+											type="button"
+											id="btnplus"
+											pid="{{ item.product.id }}">
+											<i class="fa fa-plus small"></i>
+										</button>
+									</div>
+								</div>
+
+								<div class="d-flex justify-content-between align-items-center">
+									<a
+										href="{% url 'remove_cart' item.id %}"
+										class="btn btn-outline-danger btn-sm remove-cart-btn"
+										pid="{{ item.product.id }}">
+										<i class="fa fa-trash"></i> Remove
+									</a>
+
+									<p class="amt h5 fw-bold text-success mb-0">
+										RS: {{ item.product.selling_price }}
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<hr class="text-muted" />
+					{% endfor %} {% else %}
+					<!-- EMPTY CART DESIGN -->
+					<div class="text-center py-5">
+						<img
+							src="https://cdn.dribbble.com/users/461802/screenshots/4421003/emptycart.gif"
+							alt="Empty Cart"
+							class="img-fluid mb-4"
+							style="max-width: 280px" />
+						<h5 class="fw-semibold text-muted">Your cart is empty</h5>
+						<p class="text-muted small">
+							Looks like you haven't added anything yet.
+						</p>
+
+						<a href="{% url 'collections' %}" class="btn btn-dark mt-3">
+							Continue Shopping
+						</a>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-4">
+			<div class="card shadow-sm border-0">
+				<div class="card-body">
+					<h3 class="fw-bold">Order Summary</h3>
+					<hr class="text-muted" />
+
+					<ul class="list-group list-group-flush small">
+						<li
+							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+							Amount
+							<span id="amount" class="h6 text-success fw-bold">
+								RS: {{ amount }}
+							</span>
+						</li>
+
+						<li
+							class="list-group-item d-flex justify-content-between align-items-center px-0">
+							Shipping
+							<span>RS: {{shipping_amount}}</span>
+						</li>
+
+						<li
+							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+							<div>
+								<strong>Total amount</strong>
+								<small class="text-muted">(including VAT)</small>
+							</div>
+
+							<span id="totalAmount" class="fw-bold text-success fs-5">
+								RS: {{ totalAmount }}
+							</span>
+						</li>
+					</ul>
+
+					<div class="d-grid">
+						<a
+							href="{% url 'checkout' %}"
+							class="btn btn-dark btn-lg fw-semibold">
+							Go to checkout
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		document.querySelectorAll(".plus-cart-btn").forEach(function (button) {
+			button.addEventListener("click", function () {
+				var id = this.getAttribute("pid");
+				let input = this.parentElement.querySelector("input");
+				let currentQty = parseInt(input.value);
+				if (currentQty >= 10) {
+					alert("Maximum 10 items allowed");
+					return;
+				}
+				fetch(`/pluscart/?prod_id=${id}`)
+					.then((response) => response.json())
+					.then((data) => {
+						this.parentElement.querySelector("input").value = data.quantity;
+
+						document.getElementById("amount").innerText = "RS: " + data.amount;
+						document.getElementById("totalAmount").innerText =
+							"RS: " + data.totalamount;
+					});
+			});
+		});
+		document.querySelectorAll(".minus-cart-btn").forEach(function (button) {
+			button.addEventListener("click", function () {
+				var id = this.getAttribute("pid");
+				let input = this.parentElement.querySelector("input");
+				let currentQty = parseInt(input.value);
+
+				if (currentQty <= 1) {
+					return;
+				}
+				fetch(`/minuscart/?prod_id=${id}`)
+					.then((response) => response.json())
+					.then((data) => {
+						this.parentElement.querySelector("input").value = data.quantity;
+
+						document.getElementById("amount").innerText = "RS: " + data.amount;
+						document.getElementById("totalAmount").innerText =
+							"RS: " + data.totalamount;
+					});
+			});
+		});
+	});
+</script>
+
+{% endblock content %}

@@ -1,0 +1,75 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+	<div class="container">
+		<a class="navbar-brand" href="{% url 'home' %}"
+			><i class="fa fa-cart-plus"></i> &nbsp; Shopkart</a
+		>
+		<button
+			class="navbar-toggler"
+			type="button"
+			data-bs-toggle="collapse"
+			data-bs-target="#navbarNav"
+			aria-controls="navbarNav"
+			aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<div class="navbar-nav ms-auto">
+				<a class="nav-link" aria-current="page" href="{% url 'home' %}"
+					><i class="fa fa-home"></i> Home</a
+				>
+				{% if user.is_authenticated %}
+				<li class="nav-item dropdown mx-2">
+					<a
+						class="nav-link dropdown-toggle"
+						aria-current="page"
+						href="{% url 'logout_page' %}"
+						id="profileDropdown"
+						role="button"
+						data-bs-toggle="dropdown"
+						><i class="fa fa-user"></i> {{request.user}}</a
+					>
+					<ul class="dropdown-menu" aria-labelledby="profileDropdown">
+						<li>
+							<a class="dropdown-item" href="{% url 'profile' %}"
+								><i class="fa fa-user"></i> Profile</a
+							>
+						</li>
+						<li>
+							<a class="dropdown-item" href="{% url 'orders' %}"
+								><i class="fa fa-list"></i> Orders</a
+							>
+						</li>
+						<li>
+							<a class="dropdown-item" href="{% url 'passwordchange' %}"
+								><i class="fa fa-lock"></i> Change password</a
+							>
+						</li>
+						<li>
+							<a class="dropdown-item" href="{% url 'logout_page' %}"
+								><i class="fa fa-sign-out"></i> Logout</a
+							>
+						</li>
+					</ul>
+				</li>
+				{% else %}
+				<a class="nav-link" aria-current="page" href="{% url 'login_page' %}"
+					><i class="fa fa-sign-in"></i> login</a
+				>
+				<a class="nav-link" aria-current="page" href="{% url 'register' %}"
+					><i class="fa fa-sign-in"></i> Register</a
+				>
+				{% endif %}
+				<a class="nav-link" aria-current="page" href="{% url 'collections' %}"
+					><i class="fa fa-cubes"></i> Collections
+				</a>
+				<a class="nav-link" aria-current="page" href="{% url 'cart' %}"
+					><i class="fa fa-shopping-cart"></i> Cart
+				</a>
+				<a class="nav-link" aria-current="page" href="{% url 'favourites' %}"
+					><i class="fa fa-heart"></i> Favourites
+				</a>
+			</div>
+		</div>
+	</div>
+</nav>
